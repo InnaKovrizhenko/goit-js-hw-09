@@ -19,15 +19,18 @@ function createPromise(position, delay) {
 
 function onSubmitForm(event) {
   event.preventDefault();
-}
-let timerDelay = Number(formEl.delay.value);
-for (let i = 1; i <= formEl.amount.value; i++) {
-  createPromise(i, timerDelay)
-    .then(({ position, delay }) => {
-      Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-    })
-    .catch(({ position, delay }) => {
-      Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-    });
-  timerDelay += Number(formEl.step.value);
+  const {
+    elements: { amount, step, delay },
+  } = event.currentTarget;
+  let timerDelay = Number(delay.value);
+  for (let i = 1; i <= amount.value; i += 1) {
+    createPromise(i, timerDelay)
+      .then(({ position, delay }) => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    timerDelay += Number(step.value);
+  }
 }
